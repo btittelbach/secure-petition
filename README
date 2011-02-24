@@ -1,0 +1,6 @@
+==============
+    ABOUT
+==============
+HTML-Form submission code and DB scheme for storing petition data in a secure way
+
+Basically the idea is to encrypt submitted e-mails asymetrically, so your e-mail list cannot be stolen and your supporters e-mails and personal data are protected
