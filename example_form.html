@@ -1,0 +1,33 @@
+<html>
+<body>
+<form action="submit.php" method="POST">
+<table>
+  <tr>
+    <td colspan="2"> <b>Data</b> </td> <td> <b>display publicly ?</b></td>
+  </tr>
+  <tr>
+    <td>Given Name:</td> <td><input type="text" name="gname"></td> <td><input type="checkbox" name="display_gname" checked></td>
+  </tr>
+  <tr>
+    <td>Surname:</td> <td><input type="text" name="sname"></td> <td><input type="checkbox" name="display_sname" checked></td>
+  </tr>
+  <tr>
+    <td>e-mail Address:</td> <td><input type="text" name="email"></td> <td>will never be displayed</td>
+  </tr>  
+  <tr>
+    <td>Street Address:</td> <td><input type="text" name="addr_street"></td> <td><input type="checkbox" name="display_addr_street"></td>
+  </tr>
+  <tr>
+    <td>City:</td> <td><input type="text" name="addr_city"></td> <td><input type="checkbox" name="display_addr_city" checked></td>
+  </tr>
+  <tr>
+    <td>Postal Code / PLZ:</td> <td><input type="text" name="addr_postcode"></td> <td><input type="checkbox" name="display_addr_postcode" checked></td>
+  </tr>
+  <tr>
+    <td>Country:</td> <td><input type="text" name="addr_country"></td> <td><input type="checkbox" name="display_addr_country" checked></td>
+  </tr>
+</table>
+<input type="submit"/>
+</form>
+</body>
+</html>

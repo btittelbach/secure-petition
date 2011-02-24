@@ -4,3 +4,35 @@
 HTML-Form submission code and DB scheme for storing petition data in a secure way
 
 Basically the idea is to encrypt submitted e-mails asymetrically, so your e-mail list cannot be stolen and your supporters e-mails and personal data are protected
+
+
+============================
+   Required PHP Features
+============================
+
+* openssl
+* mcrypt
+* filter
+* PECL: yaml
+* PECL: pecl-html
+
+============================
+   SETUP
+============================
+
+1. make sure you have PHP >= 5.2 and above extensions installed
+2. put the php files wherever you can best integrate them into your existing file structure
+3. create a form like example_form (in your static html files/wiki/CMS) that submits to submit.php
+   (submit.php may be renamed)
+4. use "php generate_keypair.php" to generate a public an private key
+6. store the private key securely away from the database, leave the public key next to the php files
+7. edit config.php and place it in the same dir as submit.php and verify_email.php
+8. check that all file and URI paths are correct in config.php
+
+==========
+   TODO
+==========
+
+* verify that decryption actually works
+* set "already submitted Name X Y" Cookie against accidental resubmission ??
+* support required fields
