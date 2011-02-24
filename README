@@ -28,6 +28,7 @@ Basically the idea is to encrypt submitted e-mails asymetrically, so your e-mail
 6. store the private key securely away from the database, leave the public key next to the php files
 7. edit config.php and place it in the same dir as submit.php and verify_email.php
 8. check that all file and URI paths are correct in config.php
+9. create all missing .html files configured in config.php
 
 ==========
    TODO

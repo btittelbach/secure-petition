@@ -88,7 +88,10 @@ function save_entry_to_database($posted_data, $verification_code, $display_set)
     $stmt->execute();
     $stmt->close();
   }
-  $mysqli->close();  
+  else
+    return False;
+  $mysqli->close();
+  return True;
 }
 
 function sanitize_filter_array_element(&$var, $key)
@@ -125,6 +128,7 @@ function sanitize_input($posted_stuff)
   
   $posted_data = array_intersect_key($posted_stuff, array_fill_keys($post_valid_fields,True));
   array_walk($posted_data, sanitize_filter_array_element);
+  $posted_data = array_filter($posted_data, create_function('$var','return (!empty($var));'));
   
   return array($posted_data, $display_set);  
 }
@@ -139,7 +143,12 @@ function send_email($email, $verification_code)
 function save_data($posted_stuff)
 {
   list($posted_data, $display_set) = sanitize_input($posted_stuff);
-  if ($posted_data["email"] != "")
+  
+  $missing_fields = array_diff($GLOBALS['required_fields'], array_keys($posted_data));
+  if (count($missing_fields) > 0)
+    return False;
+  
+  if (!empty($posted_data["email"]))
   {
     $verification_code=generate_verification_code();
     send_email($posted_data["email"], $verification_code);
@@ -147,7 +156,7 @@ function save_data($posted_stuff)
   else
     unset($verification_code);
   
-  save_entry_to_database($posted_data, $verification_code, $display_set);
+  return save_entry_to_database($posted_data, $verification_code, $display_set);
 }
 
 assert(extension_loaded('filter'));
@@ -159,6 +168,8 @@ if (extension_loaded('pecl_http'))
 else
   $language = $GLOBALS['supported_lang'][0];
 
-save_data($_REQUEST);
-readfile($GLOBALS['pet_html']['submit_ok'][$language]);
+if (save_data($_REQUEST))
+  readfile($GLOBALS['pet_html']['submit_ok'][$language]);
+else  
+  readfile($GLOBALS['pet_html']['submit_fail'][$language]);
 ?>

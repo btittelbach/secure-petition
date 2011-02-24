@@ -1,5 +1,4 @@
 <?php
-
 //valid encryption methods are:
 // * 'AUTO'                   choose OPENSSL_MCRYPT_AES128 or else OPENSSL_SEAL if mcrypt unavailable
 // * 'OPENSSL_SEAL'           fast not as secure (RC4 and 1024bit RSA key)
@@ -23,10 +22,17 @@ $GLOBALS['pet_db'] = array(
 // -----END PUBLIC KEY-----
 // EOF; 
 
+//no required fields:
+$GLOBALS['required_fields'] = array();
+//require all fields to be set:
+//$GLOBALS['required_fields'] = array('gname', 'sname', 'email', 'addr_country', 'addr_city', 'addr_postcode', 'addr_street');
+
 //first language is default
 $GLOBALS['supported_lang'] = array("en","de");
 $GLOBALS['pet_html']['submit_ok']['en'] = "submission_thankyou.html";
 $GLOBALS['pet_html']['submit_ok']['de'] = "submission_danke.html";
+$GLOBALS['pet_html']['submit_fail']['en'] = "submission_failure.html";
+$GLOBALS['pet_html']['submit_fail']['de'] = "submission_fehler.html";
 
 $GLOBALS['pet_html']['verify_ok']['en'] = "verify_thankyou.html";
 $GLOBALS['pet_html']['verify_ok']['de'] = "verify_danke.html";
