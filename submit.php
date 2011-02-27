@@ -54,8 +54,6 @@ function seal_data($cleartext)
 
 function save_entry_to_database($posted_data, $verification_code, $display_set)
 {
-  $db_valid_encryption_modes = array('OPENSSL_SEAL','OPENSSL_MCRYPT_AES256');
-
   $crypto_data = seal_data(serialize_array($posted_data));
   
   // after encrypting data, only save in plaintext the values that user selected to display

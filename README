@@ -20,20 +20,47 @@ Basically the idea is to encrypt submitted e-mails asymetrically, so your e-mail
    SETUP
 ============================
 
+!!! KEEP THE CONTENTS INSIDE "./offline/" ON A SEPARATE MACHINE !!!
+    (except the public key "./petition-data.pub", of course)
+
+
+On the secure offline machine:
+1. generate a public an private key
+  eg:
+    php generate_keypair.php
+2. keep the private key safe
+3. edit ./offline/config.php for later
+
+On the online machine:
 1. make sure you have PHP >= 5.2 and above extensions installed
-2. put the php files wherever you can best integrate them into your existing file structure
+2. put the php files (everything NOT in directory ./offline/) wherever you can best integrate them into your existing file structure
 3. create a form like example_form (in your static html files/wiki/CMS) that submits to submit.php
    (submit.php may be renamed)
-4. use "php generate_keypair.php" to generate a public an private key
-6. store the private key securely away from the database, leave the public key next to the php files
-7. edit config.php and place it in the same dir as submit.php and verify_email.php
-8. check that all file and URI paths are correct in config.php
-9. create all missing .html files configured in config.php
+4. copy your public key e.g. "/petition-data.pub" to your online machine
+5. Create a database for the petition data
+  eg:  
+    mysql <<< "CREATE DATABASE petition"
+    mysql petition < petition.sql
+    mysql <<< "GRANT INSERT,UPDATE on petition.entry to submitformuser@localhost identified by '<password>' "
+6. edit config.php and place it in the same dir as submit.php and verify_email.php
+7. check that all file and URI paths are correct in config.php
+8. create all missing .html files configured in config.php
+
+============================
+   DECRYPTING DATA
+============================
+
+On the secure offline machine:
+1. Install a copy of the online database on your offline machine 
+    OR make sure you have remote access to your online machine (from your offline machine, yes, haha)
+2. if not done already, edit ./offline/config.php
+    make sure your db user has CREATE and INSERT permissions
+3. run "php decrypt.php"
 
 ==========
    TODO
 ==========
 
-* verify that decryption actually works
+* hash e-mail to check against resubmission
 * set "already submitted Name X Y" Cookie against accidental resubmission ??
 * support required fields
