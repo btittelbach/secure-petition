@@ -49,7 +49,7 @@ Dear Supporter,
 
 please verify your e-mail address by clicking the following link:
 
-https://www.example.com/email_verify.php?code=%VERIFICATION_CODE%
+https://www.example.com/verify_email.php?code=%VERIFICATION_CODE%
 
 EOF;
 $GLOBALS['pet_email']['subject']['de'] = "Vielen Dank für Ihre Unterstützung (e-mail Verifikation)";
@@ -58,7 +58,7 @@ Lieber Unterstützer,
 
 Bitte verifizieren sie Ihre e-mail Addresse durch einen Klick auf folgenden Link:
 
-https://www.example.com/email_verify.php?code=%VERIFICATION_CODE%
+https://www.example.com/verify_email.php?code=%VERIFICATION_CODE%
 
 EOF;
 ?>
