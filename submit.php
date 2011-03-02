@@ -3,13 +3,18 @@ require("config.php");
 
 function serialize_array($data)
 {
-  //return serialize($data);  //PHP only
-  return yaml_emit($data, YAML_UTF8_ENCODING, YAML_LN_BREAK);  //cross-platform cross-language, needs PECL YAML
+  return serialize($data);  //PHP only
+  //return yaml_emit($data, YAML_UTF8_ENCODING, YAML_LN_BREAK);  //cross-platform cross-language, needs PECL YAML
 }
 
 function generate_verification_code()
 {
-  return hash("ripemd256",uniqid(mt_rand(), true));
+  return hash($GLOBALS['pet_db']['hash_function'],uniqid(mt_rand(), true));
+}
+
+function hash_data($cleartext)
+{
+  return hash($GLOBALS['pet_db']['hash_function'], hash($GLOBALS['pet_db']['hash_function'], $GLOBALS['pet_db']['hash_salt'].$cleartext).$GLOBALS['pet_db']['hash_salt']);
 }
 
 function seal_data($cleartext)
@@ -54,7 +59,9 @@ function seal_data($cleartext)
 
 function save_entry_to_database($posted_data, $verification_code, $display_set)
 {
-  $crypto_data = seal_data(serialize_array($posted_data));
+  $serialized_data = serialize_array($posted_data);
+  $crypto_data = seal_data($serialized_data);
+  $hashed_data = hash_data($serialized_data);
   
   // after encrypting data, only save in plaintext the values that user selected to display
   $data_to_save_plaintext = array_intersect_key($posted_data, array_fill_keys($display_set,True));
@@ -63,18 +70,22 @@ function save_entry_to_database($posted_data, $verification_code, $display_set)
   if (mysqli_connect_errno()) {
       die("Connect failed: " . mysqli_connect_error());
   }
-
-  $stmt =  $mysqli->stmt_init();
-  if ($stmt->prepare("INSERT INTO entry(gname,sname,addr_street,addr_city,addr_postcode,addr_country,crypted_data,crypted_envkey,crypted_enviv,crypted_mode,verify_code,display) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)")) 
+  
+  $rc = False;
+  $stmt = $mysqli->stmt_init();
+  if ($stmt->prepare("INSERT INTO entry(salutation,gname,sname,addr_street,addr_city,addr_postcode,addr_country,hash,hash_function,crypted_data,crypted_envkey,crypted_enviv,crypted_mode,verify_code,display) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) 
   {
-    //mysqli_stmt_bind_param($stmt, 'ssssssbbssss', 
-    mysqli_stmt_bind_param($stmt, 'ssssssssssss', 
-      $data_to_save_plaintext["gname"], 
+    //mysqli_stmt_bind_param($stmt, 'sssssssssbbssss', 
+    mysqli_stmt_bind_param($stmt, 'sssssssssssssss', 
+      $data_to_save_plaintext["salutation"],
+      $data_to_save_plaintext["gname"],
       $data_to_save_plaintext["sname"],
       $data_to_save_plaintext["addr_street"],
       $data_to_save_plaintext["addr_city"],
       $data_to_save_plaintext["addr_postcode"],
       $data_to_save_plaintext["addr_country"],
+      $hashed_data,
+      $GLOBALS['pet_db']['hash_function'],
       $crypto_data["data"],
       $crypto_data["envkey"],
       $crypto_data["enviv"],
@@ -83,13 +94,13 @@ function save_entry_to_database($posted_data, $verification_code, $display_set)
       join(",",$display_set)
       );
 
-    $stmt->execute();
+    $rc = $stmt->execute();
     $stmt->close();
   }
   else
-    return False;
+    die("Error in SQL Statement: " . mysqli_error($mysqli));
   $mysqli->close();
-  return True;
+  return $rc;
 }
 
 function sanitize_filter_array_element(&$var, $key)
@@ -113,9 +124,9 @@ function sanitize_filter_array_element(&$var, $key)
 
 function sanitize_input($posted_stuff)
 {
-  $post_valid_fields = array('gname', 'sname', 'email', 'addr_country', 'addr_city', 'addr_postcode', 'addr_street');
-  $display_post_value_prefix="display_";
-  $db_valid_display_values = array('gname', 'sname', 'addr_country', 'addr_city', 'addr_postcode', 'addr_street');
+  $post_valid_fields =       array('salutation', 'gname', 'sname', 'email', 'addr_country', 'addr_city', 'addr_postcode', 'addr_street');
+  $db_valid_display_values = array('salutation', 'gname', 'sname', 'addr_country', 'addr_city', 'addr_postcode', 'addr_street');
+  $display_post_value_prefix = "display_";
   
   $display_set=array();
   foreach ($db_valid_display_values as $dbdfield) 
@@ -145,26 +156,38 @@ function save_data($posted_stuff)
   $missing_fields = array_diff($GLOBALS['required_fields'], array_keys($posted_data));
   if (count($missing_fields) > 0)
     return False;
-  
-  if (!empty($posted_data["email"]))
+
+  if ($GLOBALS['pet_email']['send_email_verification'] and !empty($posted_data["email"]))
   {
     $verification_code=generate_verification_code();
-    send_email($posted_data["email"], $verification_code);
   }
   else
     unset($verification_code);
+    
+  $rc = save_entry_to_database($posted_data, $verification_code, $display_set);
   
-  return save_entry_to_database($posted_data, $verification_code, $display_set);
+  if ($rc and isset($verification_code))
+  {
+    send_email($posted_data["email"], $verification_code);
+  }
+
+  return $rc;
 }
 
 assert(extension_loaded('filter'));
-assert(extension_loaded('yaml'));
+//assert(extension_loaded('yaml'));
 assert(extension_loaded('openssl'));
 
 if (extension_loaded('pecl_http'))
   $language = http_negotiate_language($GLOBALS['supported_lang']);
 else
   $language = $GLOBALS['supported_lang'][0];
+
+$allowed_hash_functions = array('ripemd256','sha256','ripemd128','ripemd160');
+if (array_search($GLOBALS['pet_db']['hash_function'], $allowed_hash_functions) == False)
+{
+  $GLOBALS['pet_db']['hash_function'] = $allowed_hash_functions[0];
+}
 
 if (save_data($_REQUEST))
   readfile($GLOBALS['pet_html']['submit_ok'][$language]);

@@ -5,8 +5,11 @@ $GLOBALS['pet_db'] = array(
         'db_port' => '3306',
         'db_name' => 'petition',
         'db_user' => '',
-        'db_pass' => ''
+        'db_pass' => '',
+        'hash_salt' => '<same salt as in online config.php>'
 );
+
+$GLOBALS['conversion']['check_hash'] = True;
 
 // This is the local database where we will save the decrypted Data
 $GLOBALS['dec_db'] = array(

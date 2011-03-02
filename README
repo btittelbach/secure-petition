@@ -1,24 +1,36 @@
-==============
+=============
     ABOUT
-==============
+=============
+
 HTML-Form submission code and DB scheme for storing petition data in a secure way
 
 Basically the idea is to encrypt submitted e-mails asymetrically, so your e-mail list cannot be stolen and your supporters e-mails and personal data are protected
 
+=============
+   LICENSE
+=============
+
+The provided software is covered unter the following License:
+
+GNU Affero General Public License, version 3
+http://www.gnu.org/licenses/agpl-3.0.html
+
+additionally, your are required to contact me and tell me if 
+this stuff was actually useful to someone ;->
 
 ============================
    Required PHP Features
 ============================
 
+* PHP version >= 5.2
 * openssl
 * mcrypt
 * filter
-* PECL: yaml
 * PECL: pecl-html
 
-============================
-   SETUP
-============================
+=============
+    SETUP
+=============
 
 !!! KEEP THE CONTENTS INSIDE "./offline/" ON A SEPARATE MACHINE !!!
     (except the public key "./petition-data.pub", of course)
@@ -46,9 +58,9 @@ On the online machine:
 7. check that all file and URI paths are correct in config.php
 8. create all missing .html files configured in config.php
 
-============================
-   DECRYPTING DATA
-============================
+=======================
+    DECRYPTING DATA    
+=======================
 
 On the secure offline machine:
 1. Install a copy of the online database on your offline machine 
@@ -61,6 +73,6 @@ On the secure offline machine:
    TODO
 ==========
 
-* hash e-mail to check against resubmission
-* set "already submitted Name X Y" Cookie against accidental resubmission ??
-* support required fields
+* support Captcha
+* produce informative error message if required fields empty (like: which?) or accidental resubmit
+* think of something so database structure need only be changed in one place instead of ~10

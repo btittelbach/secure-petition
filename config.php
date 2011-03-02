@@ -4,6 +4,16 @@
 // * 'OPENSSL_SEAL'           fast not as secure (RC4 and 1024bit RSA key)
 // * 'OPENSSL_MCRYPT_AES256'  takes more time but is more secure (AES256 and 2048bit RSA key)
 // * 'OPENSSL_MCRYPT_AES128'  similar to above but faster because less random material is being generated (AES128 and 2048bit RSA key)
+
+//valid hash functions are:
+// * 'ripemd256'
+// * 'sha256'
+// * 'ripemd128'
+// * 'ripemd160'
+
+//note: hash_function and hash_salt are used the check agains accidental resubmissions
+//      don't change them later or the check will stop working
+//      (or if you are really unlucky, it may even reject valid new data as already submitted)
 $GLOBALS['pet_db'] = array(
         'db_host' => 'localhost',
         'db_port' => '3306',
@@ -11,7 +21,9 @@ $GLOBALS['pet_db'] = array(
         'db_user' => '',
         'db_pass' => '',
         'pubkey' => file_get_contents("./petition-data.pub"),
-        'crypt_method' => 'AUTO'
+        'crypt_method' => 'AUTO',
+        'hash_function' => 'ripemd256',
+        'hash_salt' => '<get some (~128) random bytes from /dev/random and put them here>'
 );
 
 
@@ -39,6 +51,7 @@ $GLOBALS['pet_html']['verify_ok']['de'] = "verify_danke.html";
 $GLOBALS['pet_html']['verify_fail']['en'] = "verify_failure.html";
 $GLOBALS['pet_html']['verify_fail']['de'] = "verify_fehler.html";
 
+$GLOBALS['pet_email']['send_email_verification'] = True;
 $GLOBALS['pet_email']['verification_code_subst'] = "%VERIFICATION_CODE%";
 $GLOBALS['pet_email']['headers'] = 'From: verification@example.com' . "\r\n" .
     'Reply-To: noreply@example.com' . "\r\n" .

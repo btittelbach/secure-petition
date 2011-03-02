@@ -3,6 +3,11 @@ ini_set("register_argc_argv",True);
 ini_set("magic_quotes_gpc",False);
 require("config.php");
 
+function hash_data($cleartext, $hash_function)
+{
+  return hash($hash_function, hash($hash_function, $GLOBALS['pet_db']['hash_salt'].$cleartext).$GLOBALS['pet_db']['hash_salt']);
+}
+
 function unseal_data($method, $ciphertext, $envkey, $enviv, $seckey)
 {
   $ciphertext = base64_decode($ciphertext);
@@ -41,9 +46,10 @@ function unseal_data($method, $ciphertext, $envkey, $enviv, $seckey)
 
 function unserialize_array($data)
 {
-  //return unserialize($data);  //PHP only
+  
   if ($data)
-    return yaml_parse(trim($data), 0);
+  return unserialize($data);  //PHP only
+  //return yaml_parse(trim($data), 0);
   else
     return $data;
 }
@@ -65,19 +71,33 @@ function decrypt_in_database($seckey)
   $mysqli_target->query("DROP TABLE IF EXISTS decrypted_entry");
   $mysqli_target->query($GLOBALS['dec_db']['sql_create_table']);
 
-  if ($result = $mysqli->query("SELECT id,crypted_data,crypted_envkey,crypted_enviv,crypted_mode,verify_ok,display FROM entry"))
+  if ($result = $mysqli->query("SELECT id,crypted_data,crypted_envkey,crypted_enviv,crypted_mode,hash,hash_function,verify_ok,display FROM entry"))
   {
     while ($entry_row = $result->fetch_assoc())
     {
-      $decrypted_row = unserialize_array(unseal_data($entry_row["crypted_mode"],$entry_row["crypted_data"],$entry_row["crypted_envkey"],$entry_row["crypted_enviv"],$seckey));
+      $unsealed_data_string = unseal_data($entry_row["crypted_mode"],$entry_row["crypted_data"],$entry_row["crypted_envkey"],$entry_row["crypted_enviv"],$seckey);
+      
+      if ($GLOBALS['conversion']['check_hash'])
+      {
+        $hashed_data = hash_data($unsealed_data_string, $entry_row["hash_function"]);
+        //print("check ".$entry_row["hash"]." == ".$hashed_data."\n");
+        if ($hashed_data != $entry_row["hash"])
+        {
+          print("ignoring entry w/ id ".$entry_row['id'].", hash does not match\n");
+          continue;
+        }
+      }
+      
+      $decrypted_row = unserialize_array($unsealed_data_string);
       if ($decrypted_row)
       {
         $stmt =  $mysqli_target->stmt_init();
-        if ($stmt->prepare("INSERT INTO decrypted_entry(id,gname,sname,email,addr_street,addr_city,addr_postcode,addr_country,verify_ok,display) VALUES(?,?,?,?,?,?,?,?,?,?)")) 
+        if ($stmt->prepare("INSERT INTO decrypted_entry(id,salutation,gname,sname,email,addr_street,addr_city,addr_postcode,addr_country,verify_ok,display) VALUES(?,?,?,?,?,?,?,?,?,?,?)")) 
         {
-          //mysqli_stmt_bind_param($stmt, 'ssssssbbssss', 
-          mysqli_stmt_bind_param($stmt, 'dsssssssss', 
+          //mysqli_stmt_bind_param($stmt, 'ssssssbbsss', 
+          mysqli_stmt_bind_param($stmt,   'dssssssssss', 
             $entry_row['id'],
+            $decrypted_row["salutation"], 
             $decrypted_row["gname"], 
             $decrypted_row["sname"],
             $decrypted_row["email"],
