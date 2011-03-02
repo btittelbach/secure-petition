@@ -187,6 +187,8 @@ assert(extension_loaded('filter'));
 //assert(extension_loaded('yaml'));
 assert(extension_loaded('openssl'));
 
+mt_srand();
+
 if (extension_loaded('pecl_http'))
   $language = http_negotiate_language($GLOBALS['supported_lang']);
 else
