@@ -73,6 +73,5 @@ On the secure offline machine:
    TODO
 ==========
 
-* support Captcha
 * write ajax submit2.php which produces informative error message if required fields empty (like: which?) or accidental resubmit
 * think of something so database structure need only be changed in one place instead of ~10
