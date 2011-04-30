@@ -37,7 +37,7 @@ $GLOBALS['pet_db'] = array(
 //no required fields:
 $GLOBALS['required_fields'] = array();
 //require all fields to be set:
-//$GLOBALS['required_fields'] = array('gname', 'sname', 'email', 'addr_country', 'addr_city', 'addr_postcode', 'addr_street');
+//$GLOBALS['required_fields'] = array('gname', 'sname', 'email', 'addr_country', 'addr_city', 'addr_postcode', 'addr_street', 'option1', 'option2', 'option3');
 
 //first language is default
 $GLOBALS['supported_lang'] = array("en","de");

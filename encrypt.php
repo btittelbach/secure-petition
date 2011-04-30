@@ -129,7 +129,7 @@ function sanitize_filter_array_element(&$var, $key)
 
 function sanitize_input($posted_stuff)
 {
-  $post_valid_fields =       array('salutation', 'gname', 'sname', 'email', 'addr_country', 'addr_city', 'addr_postcode', 'addr_street');
+  $post_valid_fields =       array('salutation', 'gname', 'sname', 'email', 'addr_country', 'addr_city', 'addr_postcode', 'addr_street', 'option1', 'option2', 'option3');
   $db_valid_display_values = array('salutation', 'gname', 'sname', 'addr_country', 'addr_city', 'addr_postcode', 'addr_street');
   $display_post_value_prefix = "display_";
   

@@ -10,6 +10,9 @@ create table if not exists decrypted_entry
   addr_postcode VARCHAR(20),
   addr_country VARCHAR(128),
   verify_ok ENUM('Y','N') NOT NULL DEFAULT 'N',
+  option1 ENUM('Y','N') NOT NULL DEFAULT 'N',
+  option2 ENUM('Y','N') NOT NULL DEFAULT 'N',
+  option3 ENUM('Y','N') NOT NULL DEFAULT 'N',
   display SET('salutation','gname', 'sname', 'addr_country', 'addr_city', 'addr_postcode', 'addr_street'),
   primary key (id)
 ) ENGINE = InnoDB, CHARACTER SET = "utf8";

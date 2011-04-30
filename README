@@ -15,7 +15,7 @@ The provided software is covered unter the following License:
 GNU Affero General Public License, version 3
 http://www.gnu.org/licenses/agpl-3.0.html
 
-additionally, your are required to contact me and tell me if 
+additionally, your are required to contact me and tell me if
 this stuff was actually useful to someone ;->
 
 ============================
@@ -50,7 +50,7 @@ On the online machine:
    (submit.php may be renamed)
 4. copy your public key e.g. "/petition-data.pub" to your online machine
 5. Create a database for the petition data
-  eg:  
+  eg:
     mysql <<< "CREATE DATABASE petition"
     mysql petition < petition.sql
     mysql <<< "GRANT INSERT,UPDATE on petition.entry to submitformuser@localhost identified by '<password>' "
@@ -59,11 +59,11 @@ On the online machine:
 8. create all missing .html files configured in config.php
 
 =======================
-    DECRYPTING DATA    
+    DECRYPTING DATA
 =======================
 
 On the secure offline machine:
-1. Install a copy of the online database on your offline machine 
+1. Install a copy of the online database on your offline machine
     OR make sure you have remote access to your online machine (from your offline machine, yes, haha)
 2. if not done already, edit ./offline/config.php
     make sure your db user has CREATE and INSERT permissions

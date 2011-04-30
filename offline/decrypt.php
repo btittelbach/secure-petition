@@ -92,10 +92,10 @@ function decrypt_in_database($seckey)
       if ($decrypted_row)
       {
         $stmt =  $mysqli_target->stmt_init();
-        if ($stmt->prepare("INSERT INTO decrypted_entry(id,salutation,gname,sname,email,addr_street,addr_city,addr_postcode,addr_country,verify_ok,display) VALUES(?,?,?,?,?,?,?,?,?,?,?)")) 
+        if ($stmt->prepare("INSERT INTO decrypted_entry(id,salutation,gname,sname,email,addr_street,addr_city,addr_postcode,addr_country,verify_ok,option1,option2,option3,display) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) 
         {
-          //mysqli_stmt_bind_param($stmt, 'ssssssbbsss', 
-          mysqli_stmt_bind_param($stmt,   'dssssssssss', 
+          //mysqli_stmt_bind_param($stmt, 'ssssssbbssssss', 
+          mysqli_stmt_bind_param($stmt,   'dsssssssssssss', 
             $entry_row['id'],
             $decrypted_row["salutation"], 
             $decrypted_row["gname"], 
@@ -106,6 +106,9 @@ function decrypt_in_database($seckey)
             $decrypted_row["addr_postcode"],
             $decrypted_row["addr_country"],
             $entry_row["verify_ok"],
+            (($decrypted_row["option1"] == True || $decrypted_row["option1"] == "True" || $decrypted_row["option1"] == 1)? 'Y':'N'),
+            (($decrypted_row["option2"] == True || $decrypted_row["option2"] == "True" || $decrypted_row["option2"] == 1)? 'Y':'N'),
+            (($decrypted_row["option3"] == True || $decrypted_row["option3"] == "True" || $decrypted_row["option3"] == 1)? 'Y':'N'),
             $entry_row["display"]
             );
 
