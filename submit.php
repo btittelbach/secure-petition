@@ -7,6 +7,11 @@ if ($_SESSION['captcha_text'] != $_REQUEST["captcha"])
 {
   die("Captcha ivalid");
 }
+else
+{
+  //caption ok, invalidating session data
+  unset($_SESSION['captcha_text']);
+}
 
 $save_result = save_data_encrypted($_REQUEST);
 if ($save_result["success"])
