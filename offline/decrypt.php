@@ -5,7 +5,7 @@ require("config.php");
 
 function hash_data($cleartext, $hash_function)
 {
-  return hash($hash_function, hash($hash_function, $GLOBALS['pet_db']['hash_salt'].$cleartext).$GLOBALS['pet_db']['hash_salt']);
+  return hash($hash_function, hash($hash_function, $GLOBALS['pet_db']['hash_salt'].trim($cleartext)).$GLOBALS['pet_db']['hash_salt']);
 }
 
 function unseal_data($method, $ciphertext, $envkey, $enviv, $seckey)
@@ -91,6 +91,15 @@ function decrypt_in_database($seckey)
       $decrypted_row = unserialize_array($unsealed_data_string);
       if ($decrypted_row)
       {
+        
+        foreach (array("option1","option2","option3") as $checkbox_field)
+        {
+          if ($decrypted_row[$checkbox_field] === "on" || $decrypted_row[$checkbox_field] === True || $decrypted_row[$checkbox_field] == "True" || $decrypted_row[$checkbox_field] == 1)
+            $decrypted_row[$checkbox_field] = 'Y';
+          else
+            $decrypted_row[$checkbox_field] = 'N';
+        }
+        
         $stmt =  $mysqli_target->stmt_init();
         if ($stmt->prepare("INSERT INTO decrypted_entry(id,salutation,gname,sname,email,addr_street,addr_city,addr_postcode,addr_country,verify_ok,option1,option2,option3,display) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) 
         {
@@ -106,9 +115,9 @@ function decrypt_in_database($seckey)
             $decrypted_row["addr_postcode"],
             $decrypted_row["addr_country"],
             $entry_row["verify_ok"],
-            (($decrypted_row["option1"] == True || $decrypted_row["option1"] == "True" || $decrypted_row["option1"] == 1)? 'Y':'N'),
-            (($decrypted_row["option2"] == True || $decrypted_row["option2"] == "True" || $decrypted_row["option2"] == 1)? 'Y':'N'),
-            (($decrypted_row["option3"] == True || $decrypted_row["option3"] == "True" || $decrypted_row["option3"] == 1)? 'Y':'N'),
+            $decrypted_row["option1"],
+            $decrypted_row["option2"],
+            $decrypted_row["option3"],
             $entry_row["display"]
             );
 

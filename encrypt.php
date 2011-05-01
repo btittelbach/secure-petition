@@ -19,7 +19,7 @@ function generate_verification_code()
 
 function hash_data($cleartext)
 {
-  return hash($GLOBALS['pet_db']['hash_function'], hash($GLOBALS['pet_db']['hash_function'], $GLOBALS['pet_db']['hash_salt'].$cleartext).$GLOBALS['pet_db']['hash_salt']);
+  return hash($GLOBALS['pet_db']['hash_function'], hash($GLOBALS['pet_db']['hash_function'], $GLOBALS['pet_db']['hash_salt'].trim($cleartext)).$GLOBALS['pet_db']['hash_salt']);
 }
 
 function seal_data($cleartext)
