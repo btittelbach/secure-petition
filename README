@@ -56,7 +56,10 @@ On the online machine:
     mysql <<< "GRANT INSERT,UPDATE on petition.entry to submitformuser@localhost identified by '<password>' "
 6. edit config.php and place it in the same dir as submit.php and verify_email.php
 7. check that all file and URI paths are correct in config.php
-8. create all missing .html files configured in config.php
+8a. create all missing .html files configured in config.php
+8b. OR: modify skeleton file "submit.php" to suit your needs
+    i.e. display more fine grained success or error messages.
+    
 
 =======================
     DECRYPTING DATA
