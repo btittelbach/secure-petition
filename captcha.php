@@ -70,6 +70,7 @@ for($c=0; $c<$num_chars; $c++)
 }
 
 $img = imagecreate($img_width, $img_height);  
+$background = imagecolorallocate($img, 0xf2, 0xf2, 0xf2);
 $black = imagecolorallocate($img, 0, 0, 0);
 $gray = imagecolorallocate($img, 60, 60, 60);
 $yellow = imagecolorallocate($img, 255,255,0);
@@ -77,7 +78,7 @@ $red = imagecolorallocate($img, 255,0,0);
 $white = imagecolorallocate($img, 255,255,255);
 $green = imagecolorallocate($img, 7, 255, 20);
 $blue = imagecolorallocate($img, 12, 0, 255);  
-imagefill($img,0,0,$gray);
+imagefill($img,0,0,$background);
 imagerectangle($img,10,10,$img_width*0.8,$img_height*0.8,$yellow);
 imagerectangle($img, $img_width*0.1,$img_height*0.1,$img_width*0.9,$img_height*0.7, $blue);
 imagerectangle($img, $img_width*0.1+1,$img_height*0.1+1,$img_width*0.9+1,$img_height*0.7+1, $blue);
@@ -87,7 +88,7 @@ $t_x = 0;
 $t_y_middle = 35;
 for($c=0; $c<$num_chars; $c++)
 {
-  imagettftext($img, $ttfsize, $char_pos[$c]["angle"], $char_pos[$c]["x"], $char_pos[$c]["y"], imagecolorallocate($img, mt_rand(210,255),mt_rand(210,255),mt_rand(210,255)), $ttf, $text[$c]);
+  imagettftext($img, $ttfsize, $char_pos[$c]["angle"], $char_pos[$c]["x"], $char_pos[$c]["y"], imagecolorallocate($img, mt_rand(10,65),mt_rand(10,65),mt_rand(10,65)), $ttf, $text[$c]);
 }
 
 for ($c=0; $c<3; $c++)
