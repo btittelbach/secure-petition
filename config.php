@@ -53,6 +53,7 @@ $GLOBALS['pet_html']['verify_fail']['de'] = "verify_fehler.html";
 
 $GLOBALS['pet_email']['send_email_verification'] = True;
 $GLOBALS['pet_email']['verification_code_subst'] = "%VERIFICATION_CODE%";
+ini_set('sendmail_from', 'verification@example.com');
 $GLOBALS['pet_email']['headers'] = 'From: verification@example.com' . "\r\n" .
     'Reply-To: noreply@example.com' . "\r\n" .
     'X-Mailer: PHP/' . phpversion();
