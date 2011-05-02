@@ -7,11 +7,6 @@ if ($_SESSION['captcha_text'] != $_REQUEST["captcha"])
 {
   die("Captcha ivalid");
 }
-else
-{
-  //caption ok, invalidating session data
-  unset($_SESSION['captcha_text']);
-}
 
 ## save_data_encrypted takes the Form Request and returns an associative array
 ## with the following keys:
@@ -24,7 +19,11 @@ else
 ##  "info"    : additional information, in case of ERROR_MISSING_FIELDS it's an array specifying the empty but required inputfield names
 $save_result = save_data_encrypted($_REQUEST);
 if ($save_result["success"])
+{
+  //captcha ok and no error, thus invalidating session data
+  unset($_SESSION['captcha_text']);
   readfile($GLOBALS['pet_html']['submit_ok'][$language]);
+}
 else
   readfile($GLOBALS['pet_html']['submit_fail'][$language]);
 ?>
