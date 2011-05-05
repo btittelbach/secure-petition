@@ -129,10 +129,12 @@ function sanitize_filter_array_element(&$var, $key)
 
 function sanitize_input($posted_stuff)
 {
-  $post_valid_fields =       array('salutation', 'gname', 'sname', 'email', 'addr_country', 'addr_city', 'addr_postcode', 'addr_street', 'option1', 'option2', 'option3');
+  $post_valid_fields =       array('salutation', 'gname', 'sname', 'email', 'addr_country', 'addr_city', 'addr_postcode', 'addr_street');
+  $post_valid_fields_checkbox = array('option1'=>'N', 'option2'=>'N', 'option3'=>'N');
   $db_valid_display_values = array('salutation', 'gname', 'sname', 'addr_country', 'addr_city', 'addr_postcode', 'addr_street');
   $display_post_value_prefix = "display_";
   
+  // build array of display checkbox data fields
   $display_set=array();
   foreach ($db_valid_display_values as $dbdfield) 
   {
@@ -140,9 +142,17 @@ function sanitize_input($posted_stuff)
       $display_set[]=$dbdfield;
   }
   
+  //validate and sanitize input fields
   $posted_data = array_intersect_key($posted_stuff, array_fill_keys($post_valid_fields,True));
   array_walk($posted_data, sanitize_filter_array_element);
   $posted_data = array_filter($posted_data, create_function('$var','return (!empty($var));'));
+  
+  // append array of set/unset option123 checkbox values (and sanitzize them to 'Y' / 'N')
+  foreach (array_keys($post_valid_fields_checkbox) as $checkbox_field_name)
+  {
+    $post_valid_fields_checkbox[$checkbox_field_name] = ((isset($posted_stuff[$checkbox_field_name]))? 'Y' : 'N' );
+  }
+  $posted_data = array_merge($posted_data, $post_valid_fields_checkbox);
   
   return array($posted_data, $display_set);  
 }
