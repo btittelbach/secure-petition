@@ -71,7 +71,7 @@ function decrypt_in_database($seckey)
   $mysqli_target->query("DROP TABLE IF EXISTS decrypted_entry");
   $mysqli_target->query($GLOBALS['dec_db']['sql_create_table']);
 
-  if ($result = $mysqli->query("SELECT id,crypted_data,crypted_envkey,crypted_enviv,crypted_mode,hash,hash_function,verify_ok,display FROM entry"))
+  if ($result = $mysqli->query("SELECT id,sign_date,crypted_data,crypted_envkey,crypted_enviv,crypted_mode,hash,hash_function,verify_ok,display FROM entry"))
   {
     while ($entry_row = $result->fetch_assoc())
     {
@@ -101,11 +101,12 @@ function decrypt_in_database($seckey)
         }
         
         $stmt =  $mysqli_target->stmt_init();
-        if ($stmt->prepare("INSERT INTO decrypted_entry(id,salutation,gname,sname,email,addr_street,addr_city,addr_postcode,addr_country,verify_ok,option1,option2,option3,display) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) 
+        if ($stmt->prepare("INSERT INTO decrypted_entry(id,sign_date,salutation,gname,sname,email,addr_street,addr_city,addr_postcode,addr_country,verify_ok,option1,option2,option3,display) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) 
         {
-          //mysqli_stmt_bind_param($stmt, 'ssssssbbssssss', 
-          mysqli_stmt_bind_param($stmt,   'dsssssssssssss', 
+          //mysqli_stmt_bind_param($stmt, 'sssssssbbssssss', 
+          mysqli_stmt_bind_param($stmt,   'dssssssssssssss', 
             $entry_row['id'],
+            $entry_row['sign_date'],
             $decrypted_row["salutation"], 
             $decrypted_row["gname"], 
             $decrypted_row["sname"],

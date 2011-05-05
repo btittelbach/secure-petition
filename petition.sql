@@ -2,6 +2,7 @@
 create table if not exists entry
 (
   id INT NOT NULL AUTO_INCREMENT,
+  sign_date DATE NOT NULL,
   salutation VARCHAR(63),
   gname VARCHAR(255),
   sname VARCHAR(255),

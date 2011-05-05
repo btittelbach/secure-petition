@@ -1,6 +1,7 @@
 create table if not exists decrypted_entry
 (
   id INT NOT NULL,
+  sign_date DATE NOT NULL,
   salutation VARCHAR(63),
   gname VARCHAR(255),
   sname VARCHAR(255),

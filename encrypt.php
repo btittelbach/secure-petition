@@ -78,7 +78,7 @@ function save_entry_to_database($posted_data, $verification_code, $display_set)
   
   $rc = False;
   $stmt = $mysqli->stmt_init();
-  if ($stmt->prepare("INSERT INTO entry(salutation,gname,sname,addr_street,addr_city,addr_postcode,addr_country,hash,hash_function,crypted_data,crypted_envkey,crypted_enviv,crypted_mode,verify_code,display) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) 
+  if ($stmt->prepare("INSERT INTO entry(sign_date,salutation,gname,sname,addr_street,addr_city,addr_postcode,addr_country,hash,hash_function,crypted_data,crypted_envkey,crypted_enviv,crypted_mode,verify_code,display) VALUES(CURDATE(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) 
   {
     //mysqli_stmt_bind_param($stmt, 'sssssssssbbssss', 
     mysqli_stmt_bind_param($stmt, 'sssssssssssssss', 
