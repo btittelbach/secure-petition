@@ -94,7 +94,7 @@ function decrypt_in_database($seckey)
         
         foreach (array("option1","option2","option3") as $checkbox_field)
         {
-          if ($decrypted_row[$checkbox_field] === "on" || $decrypted_row[$checkbox_field] === True || $decrypted_row[$checkbox_field] == "True" || $decrypted_row[$checkbox_field] == 1)
+          if (isset($decrypted_row[$checkbox_field]) and ($decrypted_row[$checkbox_field] === "on" || $decrypted_row[$checkbox_field] === True || $decrypted_row[$checkbox_field] == "True" || $decrypted_row[$checkbox_field] == 1))
             $decrypted_row[$checkbox_field] = 'Y';
           else
             $decrypted_row[$checkbox_field] = 'N';
@@ -136,7 +136,7 @@ function decrypt_in_database($seckey)
   return True;
 }
 
-assert(extension_loaded('yaml'));
+//assert(extension_loaded('yaml'));
 assert(extension_loaded('openssl'));
 $seckey = openssl_pkey_get_private($GLOBALS['dec_db']['seckey']);
 decrypt_in_database($seckey);
