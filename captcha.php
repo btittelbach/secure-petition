@@ -97,6 +97,7 @@ for ($c=0; $c<3; $c++)
   imageline($img,mt_rand(0,$img_width),mt_rand(0,$img_height),mt_rand(0,$img_width),mt_rand(0,$img_height),$green);
 }
 
+header("Cache-Control: no-cache, must-revalidate");
 header('Content-type: image/png');
 imagepng($img);
 imagedestroy($img);
