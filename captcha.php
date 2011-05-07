@@ -15,9 +15,9 @@ function randomString($len, $charset)
 }
 
 $charset = "ABCDEFGHJKLMNPRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
-$num_chars = 6;
+$num_chars = 5;
 $ttf = "Ubuntu-B.ttf"; //Schriftart
-$ttfsize = 20; //Schriftgrösse
+$ttfsize = 16; //Schriftgrösse
 $horizontal_margin = 3;
 $horizontal_min_distance = 4;
 $horizontal_max_distance = 15;
