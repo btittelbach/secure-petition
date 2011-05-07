@@ -161,13 +161,11 @@ function send_email($email, $verification_code)
 {
   global $language;
   $body = str_replace($GLOBALS['pet_email']['verification_code_subst'], $verification_code, $GLOBALS['pet_email']['body'][$language]);
-  mail($email, $GLOBALS['pet_email']['subject'][$language], $body, $GLOBALS['pet_email']['headers']);
+  return mail($email, $GLOBALS['pet_email']['subject'][$language], $body, $GLOBALS['pet_email']['headers']);
 }
 
 function save_data_encrypted($posted_stuff)
 {
-  $error=NO_ERROR; $error_info="";
-  
   list($posted_data, $display_set) = sanitize_input($posted_stuff);
   
   $missing_fields = array_diff($GLOBALS['required_fields'], array_keys($posted_data));
@@ -184,7 +182,7 @@ function save_data_encrypted($posted_stuff)
   if (! save_entry_to_database($posted_data, $verification_code, $display_set))
     return array(success=>False,error=>ERROR_DB_REPOST);
   
-  if ($rc and isset($verification_code))
+  if (isset($verification_code))
   {
     if (! send_email($posted_data["email"], $verification_code))
       return array(success=>True,error=>ERROR_SEND_EMAIL);  //success==True, because data was actually saved
